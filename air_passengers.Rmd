@@ -1,0 +1,37 @@
+---
+title: "toy_work"
+author: "Alex"
+date: "9/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(forecast)
+library(tidyverse)
+library(ggplot2)
+
+plot.ts(AirPassengers)
+
+ap=AirPassengers
+ap
+train=ap[1:134]
+log_train <- log(train)
+
+ap_ts=ts(log_train,start=c(1949,1),end=c(1960,2),frequency = 12)
+ap_ts
+ap_arim = auto.arima(ap_ts,seasonal = TRUE)
+frcst=forecast(ap_arim,h=10,)
+frcst=data.frame(frcst)
+frcst
+rename(frcst, 'forecast'='Point.Forecast')
+names(frcst)[1]<-'forecast'
+frcst$forecast
+with_preds=c(ap_ts,frcst$forecast)
+
+
+actuals=ap
+autoplot(ts(frcst))
+autoplot(ts(with_preds))
+autoplot(log(actuals))
+
+```

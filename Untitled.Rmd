@@ -1,0 +1,79 @@
+---
+title: "Untitled"
+author: "Alex"
+date: "8/21/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(forecast)
+library(HH)
+library(tsibble)
+data=read_csv('/Users/APinkerton/NYC_DS_A/interview/Coding Challenge Prep - Day 4/data/monthly_sales_data.csv')
+data
+auto.arima()
+f<-data%>%select(market,product_key)
+ff=unique(f)
+
+auto.arima(data)
+arma.loop(data)
+
+unique(c(data$market,data$product_key))
+
+nine_dfs=as_tsibble(data,key=c(market,product_key),index=date)
+nine_dfs
+for (x in nine_dfs) {
+  auto.arima(x)
+}
+markets=unique(data$market)
+prods=unique(data$product_key)
+df_list=c('a','b','c','d','e','f','g','h','i')
+for (m in markets){
+  for (p in prods){
+    for (a in df_list){
+    a=data%>%filter(market==m)%>%filter(product_key==p)
+}
+}
+}
+
+fin_dfs=list(a,b,c,d,e,f,g,h,i)
+
+```
+```{r}
+dataset<-data%>%as_tsibble(key=c('market','product_key'),index=date)
+dataset
+grps=unique(dataset[c('market','product_key')])
+grps
+horizon=12
+grps$data = apply(grps, FUN=function(row) {dataset[c('date', 'value')][dataset$market == row[1] & dataset$product_key == row[2],]}, MARGIN=1)
+grps$model = lapply(grps$data, function(data) {auto.arima(data$value)})
+grps$fcst = lapply(grps$model, function(model){forecast(model, h=horizon)$mean})
+grps
+```
+
+
+```{r}
+# Q5 Solution
+library(tidyverse)
+library(forecast)
+library(tsibble)
+
+time_series_analysis <- function(horizon = 12) {
+  # don't remove these lines
+  set.seed(123)
+  data_set <- read_csv("/Users/APinkerton/NYC_DS_A/interview/Coding Challenge Prep - Day 4/data/monthly_sales_data.csv")
+    
+  # write your solution here (remember to return the right object)
+  data_set <- data_set %>% 
+                as_tsibble(key = c('market', 'product_key'), index=date)
+  groups = unique(data_set[c('market', 'product_key')])
+  groups$data = apply(groups, FUN=function(row) {data_set[c('date', 'value')][data_set$market == row[1] & data_set$product_key == row[2],]}, MARGIN=1)
+  groups$model = lapply(groups$data, function(data) {auto.arima(data$value)})
+  groups$fcst = lapply(groups$model, function(model){forecast(model, h=horizon)$mean})
+
+  return(groups)
+}
+
+time_series_analysis()
+```

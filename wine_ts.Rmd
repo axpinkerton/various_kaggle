@@ -1,0 +1,29 @@
+---
+title: "wine_ts"
+author: "Alex"
+date: "9/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(forecast)
+library(tidyverse)
+library(ggplot2)
+wine=ts(read_csv('/Users/APinkerton/NYC_DS_A/toy_dataset_work/wine.csv'),frequency=12)
+wine=wine[,2]
+autoplot(wine)
+
+arim<-auto.arima(wine)
+fc=forecast(arim,h = 12)
+autoplot(fc)
+
+
+
+
+
+
+
+
+
+
+```
