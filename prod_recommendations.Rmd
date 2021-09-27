@@ -1,0 +1,52 @@
+---
+title: "prod"
+author: "Alex"
+date: "9/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(forecast)
+library(tidyverse)
+library(ggplot2)
+library(datasets)
+library(astsa)
+library(tsdl)
+library(arules)
+library(lubridate)
+library(plyr)
+library(splitstackshape) 
+
+xactions=read_csv('/Users/APinkerton/NYC_DS_A/projects/proj_1/OnlineRetail.csv')
+colnames(xactions)=tolower(colnames(xactions))
+xactions$invoicedate=lubridate::as_date(xactions$invoicedate)
+xactions$sls=xactions$quantity*xactions$unitprice
+xactions=xactions[complete.cases(xactions),]
+my_sort=xactions[order(xactions$customerid),]
+
+items_to_rec1=ddply(xactions,c("customerid","invoicedate"),function(df1)paste(df1$description,collapse = ","))
+colnames(items_to_rec1)=c('custo','date','items')
+
+items_to_rec2=items_to_rec1$items
+head(items_to_rec2)
+items_to_rec2
+
+head(items_to_rec1)
+
+wider_df=pivot_wider(items_to_rec1,names_from = items,values_from = 1)
+wider_df.drop
+
+summary(wider_df)
+
+write_csv(wider_df,"item_basket_analysis.csv")
+write.csv(wider_df,"item_basket_analysis.csv", quote = FALSE, row.names = TRUE)
+```
+
+```{r}
+item_list=read_delim('/Users/APinkerton/NYC_DS_A/toy_dataset_work/item_basket_analysis.csv', delim=',')
+
+wider_df
+
+
+
+```
