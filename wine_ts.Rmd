@@ -16,6 +16,27 @@ autoplot(wine)
 arim<-auto.arima(wine)
 fc=forecast(arim,h = 12)
 autoplot(fc)
+```
+
+
+```{r}
+taylor=ts(read_csv('/Users/APinkerton/NYC_DS_A/toy_dataset_work/taylor.csv'),frequency=48)
+taylor=taylor[,2]
+autoplot(taylor)
+
+arim<-auto.arima(taylor)
+frct=forecast(arim,h=(48*1))
+autoplot(frct)
+
+```
+```{r}
+gas=ts(read_csv('/Users/APinkerton/NYC_DS_A/toy_dataset_work/gas.csv'),frequency = 52)
+gas=gas[,2]
+
+auto.arima(gas)
+
+
+
 
 
 
